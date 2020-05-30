@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% load static %}
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static '/login.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if success %}
+    <h1 class="display-5">You have signed up successfully!</h1><br>
+    <a href="{% url 'index' %}">Return to the main page</a>
+{%  else %}
+    <h1 class="display-5">Sign up now and for free!</h1><br>
+    <form method="post">
+        {%  csrf_token %}
+        <div class="form-group">
+            {{ form }}
+        </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endif %}
+
+{% endblock %}

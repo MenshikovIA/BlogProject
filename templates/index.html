@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Garstone</title>{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="pb-4 mb-4 border-bottom">Welcome to localhost! Make yourself at home!</h2>
+        {% for post in posts %}
+            <div class="container border-bottom blog-post">
+                <div class="blog-post-meta">
+                    {{ post.creation_date }} by {{ post.author }}
+                    {% if user == post.author %}
+                        <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
+                    {% endif %}
+                </div>
+                <a href="/posts/{{ post.id }}"> <h3>{{ forloop.counter }}. {{ post.title }}</h3></a>
+                <div class="container">
+                    {{ post.text|truncatewords:40 }}...
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

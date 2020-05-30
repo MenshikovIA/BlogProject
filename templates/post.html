@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ post.title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container border-bottom blog-post">
+
+        <h3>{{ post.title }}</h3>
+
+        <div class="blog-post-meta">
+            {{ post.creation_date }} by {{ post.author }}
+            {% if user == post.author %}
+                <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
+            {% endif %}
+        </div><br>
+
+        <div>
+            {{ post.text }}
+        </div>
+    </div>
+
+    <div class="container return-btn">
+        <button type="submit" class="btn btn-primary" onclick="window.history.go(-1); return false;">Go back</button>
+    </div>
+    <form action="{{ url }}" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-sm-11">
+                {{ comment_form }}
+            </div>
+            <div class="col-sm-1">
+                {% if user.is_authenticated %}
+                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                {% else %}
+                    <button class="btn btn-secondary mb-2" style="font-size: 0.7em" disabled>Login<br>to comment</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    {% for comment in comments %}
+        <div class="container border-bottom blog-comment">
+            <div class="blog-post-meta">
+                {{ comment.creation_date }} by {{ comment.author }}
+            </div>
+            <div class="container">
+                {{ comment.text }}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

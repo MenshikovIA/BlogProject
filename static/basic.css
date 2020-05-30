@@ -1,0 +1,66 @@
+body{
+    font-family: 'Libre Baskerville', serif;
+}
+
+.my_fieldset{
+    border: 1px solid grey;
+    border-radius: 6px;
+    font-size: 1em;
+}
+
+legend.profile_legend{
+    width: inherit;
+    padding: 10px 20px;
+    font-size: 120%;
+    margin-left: 15px;
+    border-bottom: none;
+}
+
+.my_row{
+    margin-bottom: 10px;
+}
+
+.profile_avatar_img{
+    max-height: 120px;
+    max-width: 120px;
+    margin-bottom: 10px;
+    horiz-align: center;
+}
+
+.avatar-btn{
+    font-size: 0.8em;
+    padding: 6px 6px;
+    margin-bottom: 10px;
+}
+
+.blog-post-meta{
+    color: #999;
+    font-size: 0.7em;
+}
+
+.blog-post{
+    padding-bottom: 40px;
+    margin-top: 40px;
+}
+
+.return-btn{
+    margin: 20px 0px 20px 0px;
+}
+
+.blog-comment{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#id_avatar{
+    display: none;
+}
+
+#delete_btn{
+    background: none;
+    border: none;
+    padding: 0;
+    color: #999;
+    text-decoration: underline;
+    cursor: pointer;
+}

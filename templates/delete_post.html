@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Hey,<br>are you sure you want to delete<br><b>"{{ object.title }}"</b>?</h1>
+    <div class="blog-post-meta" style="margin-bottom: 40px">
+        Created: {{ object.creation_date }} by {{ object.author }}
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" style="width:100%" class="btn btn-large btn-danger">Yeap, I'm sure.</button>
+            </form>
+        </div>
+        <div class="col-lg-3 float-left">
+            <button type="button" style="width:100%" class="btn btn-success" onclick="window.history.back();">No, go back</button>
+        </div>
+    </div>
+{% endblock %}

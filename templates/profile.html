@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if user.is_authenticated %}
+        <title>{{ user.username }} profile</title>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+{#    USER INFO      #}
+    <div class="container col-lg-6">
+        <fieldset class="my_fieldset">
+            <legend class="profile_legend">User info</legend>
+            <form action="profile.html" method="post">
+                {% csrf_token %}
+
+                <div class="container">
+                    <div class="row my_row">
+                        <div class="col-4">
+                            <label for="username">Username:</label>
+                        </div>
+                        <div class="col-8">
+                            <input name="username" type="text" class="form-control" id="username" value={{user.username}}>
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-4">
+                            <label for="email">E-mail:</label>
+                        </div>
+                        <div class="col-8">
+                            <input name="email" type="email" class="form-control" id="email" value={{ user.email }}>
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-4">
+                            <label for="first_name">First name:</label>
+                        </div>
+                        <div class="col-8">
+                            <input name="first_name" type="text" class="form-control" id="first_name" value={{ user.first_name }}>
+                        </div>
+                    </div>
+                <div class="row my_row">
+                        <div class="col-4">
+                            <label for="last_name">Last name:</label>
+                        </div>
+                        <div class="col-8">
+                            <input name="last_name" type="text" class="form-control" id="last_name" value={{ user.last_name }}>
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary" name="ui_button">Save</button>
+                        </div>
+                        {% if message_ui %}
+                            <div class="col-9" style="color: red;">
+                                <h5 class="text-right">{{ message_ui }}</h5>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+
+
+{# AVATAR UPLOAD #}
+    <div class="container col-lg-2">
+        <fieldset class="my_fieldset">
+            <legend class="profile_legend">Avatar</legend>
+            <form action="profile.html" method="post" enctype="multipart/form-data" id="av_form">
+                <div class="text-center">
+                    <img class="profile_avatar_img" src="{{ request.user.myuser.avatar.url }}">
+
+                        {% csrf_token %}
+                        {{ form_av.avatar }}
+                    <div class="text-center">
+                        <div class="container my_row">
+                            <span>
+                                <button type="button" class="btn btn-primary avatar-btn" name='browse_btn' id="browse_btn">Browse</button>
+                            </span>
+                            <span>
+                                <button type="submit" class="btn btn-primary avatar-btn" name="av_button" id="av_button">Save</button>
+                            </span>
+                        </div>
+                        <script src="{% static '/av_buttons.js' %}"></script>
+
+                        {% if message_av %}
+                            <h5 style="color: red;">{{ message_av }}</h5>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+
+{#    PASSWORD CHANGE     #}
+    <div class="container col-lg-4">
+        <fieldset class="my_fieldset">
+            <legend class="profile_legend">Password change</legend>
+            <form action="profile.html" method="post">
+                {% csrf_token %}
+
+                <div class="container">
+                    <div class="row my_row">
+                        <div class="col-7">
+                            <label for="old_password">Old password:</label>
+                        </div>
+                        <div class="col-5">
+                            <input name="old_password" type="password" class="form-control" id="old_password" placeholder="********">
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-7">
+                            <label for="new_password1">New password:</label>
+                        </div>
+                        <div class="col-5">
+                            <input name="new_password1" type="password" class="form-control" id="new_password1" placeholder="********">
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-7">
+                            <label for="new_password2">Please, repeat:</label>
+                        </div>
+                        <div class="col-5">
+                            <input name="new_password2" type="password" class="form-control" id="new_password2" placeholder="********">
+                        </div>
+                    </div>
+                    <div class="row my_row">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary" name="password_button">Save</button>
+                        </div>
+                        {% if message_ps %}
+                            <div class="col-9" style="color: red;">
+                                <h5 class="text-right">{{ message_ps }}</h5>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+</div>
+
+{% endblock %}
