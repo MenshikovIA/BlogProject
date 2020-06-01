@@ -23,7 +23,8 @@ class NewPostView(View):
         if form.is_valid():
             post_obj = form.save(commit=False)
             post_obj.author_id = request.user.id
-            post_obj.image = request.FILES['image']
+            if request.POST['image']:
+                post_obj.image = request.FILES['image']
             post_obj.save()
             self.done = True
         return render(request, 'newpost.html', context={'form': form, 'done': self.done})
@@ -120,7 +121,7 @@ class ProfileView(View):
 
         elif 'av_button' in request.POST:
             form = forms.LoadAvatarForm(request.POST, request.FILES)
-            if form.is_valid():
+            if form.is_valid() and request.POST['avatar']:
                 MyUser.objects.filter(user_id=request.user.id).delete()
                 current_user = form.save(commit=False)
                 current_user.user = request.user
