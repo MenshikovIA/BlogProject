@@ -15,7 +15,7 @@
                 </div>
                 <a href="/posts/{{ post.id }}"> <h3>{{ forloop.counter }}. {{ post.title }}</h3></a>
                 <div class="container">
-                    {{ post.text|truncatewords:40 }}...
+                    {{ post.text|truncatewords:40 }}
                 </div>
             </div>
         {% endfor %}
