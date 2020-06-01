@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
+    {% load static %}
     <title>{{ post.title }}</title>
 {% endblock %}
 
@@ -15,16 +16,24 @@
             {% if user == post.author %}
                 <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
             {% endif %}
-        </div><br>
-
-        <div>
-            {{ post.text }}
         </div>
     </div>
 
-    <div class="container return-btn">
-        <button type="submit" class="btn btn-primary" onclick="window.history.go(-1); return false;">Go back</button>
+    <div class="container">
+        <img id="myImg" class="post-image" src="{{ MEDIA_URL }}{{ post.image }}">
+        <p style="text-align: justify;">{{ post.text|linebreaks }}</p>
     </div>
+
+    <div id="myModal" class="modal">
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="img01">
+    </div>
+
+    <button id="return_btn" type="submit" class="btn btn-primary fixed-top return-btn d-none d-lg-block"
+            onclick="window.history.go(-1); return false;">Go back</button>
     <form action="{{ url }}" method="post">
         {% csrf_token %}
         <div class="form-row">
@@ -47,9 +56,10 @@
                 {{ comment.creation_date }} by {{ comment.author }}
             </div>
             <div class="container">
-                {{ comment.text }}
+                {{ comment.text|linebreaks }}
             </div>
         </div>
     {% endfor %}
 
+     <script src="{% static '/zoom_img.js' %}"></script>
 {% endblock %}

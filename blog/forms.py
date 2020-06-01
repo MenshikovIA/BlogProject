@@ -24,7 +24,7 @@ class RegisterForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
-class LoadImageForm(forms.ModelForm):
+class LoadAvatarForm(forms.ModelForm):
     class Meta:
         model = MyUser
         fields = ('avatar',)
@@ -62,14 +62,37 @@ class LoadImageForm(forms.ModelForm):
 
 class PostForm(forms.ModelForm):
 
+    class Meta:
+        model = Post
+        fields = ('title', 'text', 'image')
+
     title = forms.CharField(label='Title',
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}))
     text = forms.CharField(label=False,
                            widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Text'}))
+    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
 
-    class Meta:
-        model = Post
-        fields = ('title', 'text',)
+    def clean_img(self):
+        img = self.cleaned_data['img']
+
+        try:
+            # validate content type
+            main, sub = img.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, GIF or PNG image.')
+
+            # validate file size
+            if img._size > 20 * 1024 * 1024:
+                raise forms.ValidationError(u'Image file size may not exceed 20mb.')
+
+        except AttributeError:
+            """
+            Handles case when we are updating the post
+            and do not supply a new img
+            """
+            pass
+
+        return img
 
 
 class CommentForm(forms.ModelForm):
@@ -82,3 +105,4 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+

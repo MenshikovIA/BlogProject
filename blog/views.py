@@ -19,10 +19,11 @@ class NewPostView(View):
         return redirect('/')
 
     def post(self, request, *args, **kwargs):
-        form = forms.PostForm(request.POST)
+        form = forms.PostForm(request.POST, request.FILES)
         if form.is_valid():
             post_obj = form.save(commit=False)
             post_obj.author_id = request.user.id
+            post_obj.image = request.FILES['image']
             post_obj.save()
             self.done = True
         return render(request, 'newpost.html', context={'form': form, 'done': self.done})
@@ -88,7 +89,7 @@ class LogoutView(View):
 
 class ProfileView(View):
 
-    form_av = forms.LoadImageForm()
+    form_av = forms.LoadAvatarForm()
 
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
@@ -118,7 +119,7 @@ class ProfileView(View):
             return render(request, 'profile.html', context={'message_ps': message_ps, 'form_av': self.form_av})
 
         elif 'av_button' in request.POST:
-            form = forms.LoadImageForm(request.POST, request.FILES)
+            form = forms.LoadAvatarForm(request.POST, request.FILES)
             if form.is_valid():
                 MyUser.objects.filter(user_id=request.user.id).delete()
                 current_user = form.save(commit=False)
@@ -130,12 +131,14 @@ class ProfileView(View):
                 message_av = form.errors
             return render(request, 'profile.html', context={'message_av': message_av, 'form_av': self.form_av})
 
-        elif 'id_avatar' in request.POST:
+        elif 'ui_button' in request.POST:
 
             username = request.POST['username']
             email = request.POST['email']
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
+
+            username_changed = username != request.user.username
 
             if not username:
                 message_ui = 'Username cannot be empty!'
@@ -143,13 +146,12 @@ class ProfileView(View):
             elif not email:
                 message_ui = 'Email cannot be empty!'
 
-            elif User.objects.filter(username=username).exists():
+            elif username_changed and User.objects.filter(username=username).exists():
                 message_ui = 'Sorry, this username is occupied!'
 
             else:
-                print(str(User.objects.filter(username=username)))
-                print(User.objects.filter(username=username).exists())
-                request.user.username = username
+                if username_changed:
+                    request.user.username = username
                 request.user.email = email
                 request.user.first_name = first_name
                 request.user.last_name = last_name
@@ -188,5 +190,5 @@ class PostView(TemplateView):
 
 class MyDeleteView(DeleteView):
     model = Post
-    success_url = reverse_lazy('index')  # This is where this view will redirect the user
+    success_url = reverse_lazy('index')
     template_name = 'delete_post.html'
