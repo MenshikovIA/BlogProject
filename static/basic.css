@@ -68,6 +68,12 @@ legend.profile_legend{
     border-radius: 6px;
 }
 
+.main-page-img{
+    max-width: 200px;
+    max-height: 200px;
+    margin: 10px 0px;
+}
+
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -129,4 +135,8 @@ legend.profile_legend{
     color: #999;
     text-decoration: underline;
     cursor: pointer;
+}
+
+#comments_link{
+    color: grey;
 }

@@ -9,11 +9,18 @@
 
     <div class="container border-bottom blog-post">
 
-        <h3>{{ post.title }}</h3>
+        <div class="row container">
+            <h3>{{ post.title }}</h3>
+            {% if user == post.author or user.is_staff %}
+                <a href="{% url 'update' pk=post.id %}">
+                    <img src="{% static '/images/edit.png' %}" style="border: none; background: none" height="30" width="30">
+                </a>
+            {% endif %}
+        </div>
 
         <div class="blog-post-meta">
             {{ post.creation_date }} by {{ post.author }}
-            {% if user == post.author %}
+            {% if user == post.author or user.is_staff %}
                 <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
             {% endif %}
         </div>

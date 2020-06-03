@@ -66,11 +66,12 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'text', 'image')
 
-    title = forms.CharField(label='Title',
+    title = forms.CharField(label=False,
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}))
     text = forms.CharField(label=False,
                            widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Text'}))
-    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
+    image = forms.ImageField(label=False,
+                             required=False, widget=forms.FileInput())
 
     def clean_img(self):
         img = self.cleaned_data['img']

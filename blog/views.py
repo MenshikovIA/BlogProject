@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, UpdateView
 from django.views.generic.base import TemplateView
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import check_password
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from blog import forms
 from blog.models import MyUser, Post, Comment
 
@@ -23,11 +24,17 @@ class NewPostView(View):
         if form.is_valid():
             post_obj = form.save(commit=False)
             post_obj.author_id = request.user.id
-            if request.POST['image']:
-                post_obj.image = request.FILES['image']
             post_obj.save()
             self.done = True
         return render(request, 'newpost.html', context={'form': form, 'done': self.done})
+
+
+class UpdatePostView(UpdateView):
+    model = Post
+    # fields = ('title', 'text', 'image')
+    success_url = reverse_lazy('index')
+    template_name = 'post_update.html'
+    form_class = forms.PostForm
 
 
 class LoginView(View):
@@ -50,7 +57,16 @@ class LoginView(View):
 class MainPageView(View):
     @staticmethod
     def get(request, *args, **kwargs):
-        return render(request, 'index.html', context={'posts': Post.objects.all().order_by('-creation_date')})
+        all_posts = Post.objects.all().order_by('-creation_date')
+        page = request.GET.get('page', 1)
+        paginator = Paginator(all_posts, 5)
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+        return render(request, 'index.html', context={'posts': posts})
 
 
 class SignUpView(View):

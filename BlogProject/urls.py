@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import url
-from blog.views import MainPageView, SignUpView, LoginView, LogoutView, ProfileView, NewPostView, MyDeleteView, PostView
+from blog.views import (MainPageView, SignUpView, LoginView, LogoutView,
+                        ProfileView, NewPostView, MyDeleteView, PostView, UpdatePostView)
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -28,6 +29,7 @@ urlpatterns = [
     re_path('profile/', ProfileView.as_view(), name='profile'),
     re_path('newpost', NewPostView.as_view(), name='newpost'),
     re_path('posts/(?P<pid>\d+)', PostView.as_view(), name='post'),
+    re_path('update_post/(?P<pk>\d+)', UpdatePostView.as_view(), name='update'),
     re_path('delete_post/(?P<pk>\d+)', MyDeleteView.as_view(), name='delete_post'),
     url(r'^$', MainPageView.as_view(), name='index'),
     re_path('index', MainPageView.as_view()),

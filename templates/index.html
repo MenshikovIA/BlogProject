@@ -4,20 +4,62 @@
 
 {% block content %}
     <div class="container">
-        <h2 class="pb-4 border-bottom">Welcome to localhost! Make yourself at home!</h2>
+        <h2 class="pb-4 border-bottom">Welcome to my blog! Make yourself at home.</h2>
         {% for post in posts %}
             <div class="container border-bottom blog-post">
-                <div class="blog-post-meta">
-                    {{ post.creation_date }} by {{ post.author }}
-                    {% if user == post.author %}
-                        <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
-                    {% endif %}
-                </div>
-                <a href="/posts/{{ post.id }}"> <h3>{{ forloop.counter }}. {{ post.title }}</h3></a>
-                <div class="container">
-                    {{ post.text|truncatewords:40 }}
+                <div class="row">
+                    <div class="container col-lg-8 col-md-7 col-sm-auto">
+                        <div class="blog-post-meta">
+                            {{ post.creation_date }} by {{ post.author }}
+                            {% if user == post.author %}
+                                <a href="{% url 'delete_post' pk=post.id %}" id="delete_btn">(delete post)</a>
+                            {% endif %}
+                        </div>
+                        <a href="/posts/{{ post.id }}"> <h3>{{ post.title }}</h3></a>
+
+                        {{ post.text|truncatewords:50 }}
+                        <div class="blog-post-meta" style="margin-top: 10px">
+                            <a id='comments_link' href="/posts/{{ post.id }}">Comments: {{ post.post_comments.count }}</a>
+                        </div>
+                    </div>
+                    <div class="container col-lg-4 col-md-5 col-sm-auto text-center">
+                        {% if post.image %}
+                            <a href="/posts/{{ post.id }}"><img src="{{ MEDIA_URL }}{{ post.image}}" class="rounded center-block main-page-img"></a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% endfor %}
+    {% if posts.has_other_pages %}
+        <nav aria-label="...">
+            <ul class="pagination">
+                {% if posts.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for i in posts.paginator.page_range %}
+                    {% if posts.number == i %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ i }}
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if posts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
     </div>
 {% endblock %}
