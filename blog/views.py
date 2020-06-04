@@ -6,12 +6,14 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from blog import forms
 from blog.models import MyUser, Post, Comment
 
 
-class NewPostView(View):
+class NewPostView(LoginRequiredMixin, View):
+    login_url = 'login'
     done = False
 
     def get(self, request, *args, **kwargs):
@@ -29,9 +31,9 @@ class NewPostView(View):
         return render(request, 'newpost.html', context={'form': form, 'done': self.done})
 
 
-class UpdatePostView(UpdateView):
+class UpdatePostView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
     model = Post
-    # fields = ('title', 'text', 'image')
     success_url = reverse_lazy('index')
     template_name = 'post_update.html'
     form_class = forms.PostForm
@@ -104,8 +106,8 @@ class LogoutView(View):
         return redirect('index')
 
 
-class ProfileView(View):
-
+class ProfileView(LoginRequiredMixin, View):
+    login_url = 'login'
     form_av = forms.LoadAvatarForm()
 
     def get(self, request, *args, **kwargs):
@@ -205,7 +207,8 @@ class PostView(TemplateView):
         return super(TemplateView, self).render_to_response(context)
 
 
-class MyDeleteView(DeleteView):
+class MyDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
     model = Post
     success_url = reverse_lazy('index')
     template_name = 'delete_post.html'
