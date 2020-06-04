@@ -26,12 +26,15 @@
         </div>
     </div>
 
-
     <div class="container">
-        {% if post.image %}
-        <img id="myImg" class="post-image" src="{{ MEDIA_URL }}{{ post.image }}">
-        {% endif %}
-        <p style="text-align: justify;">{{ post.text|linebreaks }}</p>
+        <div class="row">
+            <div class="container">
+                {% if post.image %}
+                <img id="myImg" class="post-image" src="{{ MEDIA_URL }}{{ post.image }}">
+                {% endif %}
+                <p style="text-align: justify;">{{ post.text|linebreaks }}</p>
+            </div>
+        </div>
     </div>
 
 
