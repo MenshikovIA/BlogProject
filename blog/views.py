@@ -139,7 +139,7 @@ class ProfileView(LoginRequiredMixin, View):
 
         elif 'av_button' in request.POST:
             form = forms.LoadAvatarForm(request.POST, request.FILES)
-            if form.is_valid() and request.POST['avatar']:
+            if form.is_valid() and request.FILES:
                 MyUser.objects.filter(user_id=request.user.id).delete()
                 current_user = form.save(commit=False)
                 current_user.user = request.user
